@@ -1,7 +1,11 @@
-/*console.log('If you see this message, your script is running.');*/
+// 1. Use Strict Mode
+'use strict';
 
-playGame();
+// 2. Global Variables and Constants
+let playerWins = 0;
+let computerWins = 0;
 
+// 3. Functions
 function getComputerChoice(){
     /* Randomly return either rock, paper or scissors */
     let index = Math.floor(Math.random()*3);
@@ -16,63 +20,93 @@ function getComputerChoice(){
     }
 }
 
-function playRound(playerSelection, computerSelection){
-    /* Play a single round of the game
-    Return a string that declares the winner or tie of the round like: "You Lose! Paper beats Rock"
-    Make the function's playerSelection parameter case-insensitive
-    Make sure to return the result of this function
-    Only add console log to see the result */
+function playRound(playerSelection){
+    /* Play a single round of the game */
+    const outputDiv = document.getElementById("output");
+    const paragraph = document.createElement("p");
+    const playerScore = document.getElementById("playerWins");
+    const computerScore = document.getElementById("computerWins");
+    let message = "";
+    let computerSelection = getComputerChoice();
+
     if ((computerSelection == "rock" && playerSelection == "rock") || (computerSelection == "paper" && playerSelection == "paper") || (computerSelection == "scissors" && playerSelection == "scissors")){
-        console.log("¡It's a Tie! Both were " + computerSelection)
-        return "tie";
+        message = "¡It's a Tie! Both were " + computerSelection;
+        paragraph.textContent = message;
+        outputDiv.appendChild(paragraph);
+        playerWins++;
+        playerScore.textContent = playerWins;
+        computerWins++;
+        computerScore.textContent = computerWins;
     } else if ((computerSelection == "paper" && playerSelection == "rock") || (computerSelection == "rock" && playerSelection == "scissors") || (computerSelection == "scissors" && playerSelection == "paper")){
-        console.log("¡You Lose! " + computerSelection + " over " + playerSelection)
-        return "lose";
+        message = "¡You Lose! " + computerSelection + " over " + playerSelection;
+        paragraph.textContent = message;
+        outputDiv.appendChild(paragraph);
+        computerWins++;
+        computerScore.textContent = computerWins;
     } else {
-        console.log("¡You Win! " + playerSelection + " over " + computerSelection)
-        return "win";
+        message = "¡You Win! " + playerSelection + " over " + computerSelection;
+        paragraph.textContent = message;
+        outputDiv.appendChild(paragraph);
+        playerWins++;
+        playerScore.textContent = playerWins;
     }
 }
+
+// 4. Event Listeners
+document.addEventListener('DOMContentLoaded', function(){
+    const button1 = document.getElementById('rock');
+    const button2 = document.getElementById('paper');
+    const button3 = document.getElementById('scissors');
+    if (button1){
+        button1.addEventListener('click', function(){
+            playRound("rock");
+            playGame();
+        });
+    }
+    else{
+        console.error('Button 1 element not found');
+    }
+    if (button2){
+        button2.addEventListener('click', function(){
+            playRound("paper");
+            playGame();
+        });
+    }
+    else{
+        console.error('Button 2 element not found');
+    }
+    if (button3){
+        button3.addEventListener('click', function(){
+            playRound("scissors");
+            playGame();
+        });
+    }
+    else{
+        console.error('Button 3 element not found');
+    }
+});
+
+// 5. Main Execution Code
+//(function main(){})();
 
 function playGame(){
     /* Add playRound to this function
     5 - round game that keeps score and reports a winner or loser at the end
     Can use a loop (if know already) or just call the playRound function 5 times in a row
     Use prompt() to the input from user */
-    let playerWins = 0;
-    let computerWins = 0;
-    let playerSelection = "";
 
-    for (let i = 0; i < 5; i++){
-        playerSelection = prompt("ROUND " + (i+1) + " - Please enter your selection: rock, paper or scissors");
-        playerChoice = playerSelection.toLowerCase();
-        /*console.log("Player selection: " + playerChoice);*/
-        let computerSelection = getComputerChoice();
-        /*console.log("Computer Choice: " + computerSelection);*/
-        let roundResult = playRound(playerChoice, computerSelection);
-
-        if (roundResult == "win"){
-            playerWins++;
-            console.log("Player Wins:" + playerWins);
-            continue;
-        } else if (roundResult == "tie"){
-            playerWins++;
-            console.log("Player Wins:" + playerWins);
-            computerWins++;
-            console.log("Computer Wins:" + computerWins);
-            continue;
+    if (playerWins === 5 || computerWins === 5){
+        const outputDiv = document.getElementById("output");
+        const paragraph = document.createElement("p");
+        let message = "";
+        if (playerWins === 5 && playerWins > computerWins){
+            message = "¡Player wins the game!";
+        } else if (computerWins === 5 && computerWins > playerWins){
+            message = "¡Computer wins the game!";
         } else {
-            computerWins++;
-            console.log("Computer Wins:" + computerWins);
-            continue;
+            message = "¡OMG! ¡It's a tie!!!";
         }
-    }
-    
-    if (playerWins > computerWins){
-        console.log("¡Player wins the game!");
-    } else if (computerWins > playerWins){
-        console.log("¡Computer wins the game!");
-    } else {
-        console.log("¡OMG! ¡It's a tie!!!");
+        paragraph.textContent = message;
+        outputDiv.appendChild(paragraph);
     }
 }
